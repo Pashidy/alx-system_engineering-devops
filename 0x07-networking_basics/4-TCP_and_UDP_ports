@@ -1,0 +1,9 @@
+#!/bin/bash/env bash
+
+# Display listening sockets using netstat
+echo "Listening Sockets:"
+netstat -tuln | awk '/^tcp/ {print $4}'
+
+# Display PID and name of the program for each listening socket using lsof
+echo -e "\nPID and Program for Listening Sockets:"
+lsof -i -P -n | grep LISTEN
