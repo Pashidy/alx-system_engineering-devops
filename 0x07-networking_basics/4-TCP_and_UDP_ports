@@ -1,4 +1,4 @@
-#!/usr/bash/env bash
+#!/usr/bin/env bash
 
 # Display listening sockets using netstat
 # Display PID and name of the program for each listening socket using lsof
