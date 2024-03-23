@@ -1,3 +1,4 @@
+#!/usr/bin/pup
 # To execute the killmenow command
 
 exec { 'killmenow_process':
@@ -5,3 +6,4 @@ exec { 'killmenow_process':
   refreshonly => true,
   onlyif      => 'pgrep killmenow',
 }
+
