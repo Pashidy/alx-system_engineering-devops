@@ -51,4 +51,3 @@ if ! netstat -tuln | grep ':80' &> /dev/null; then
 fi
 
 echo "Nginx is now configured to listen on port 80."
-
