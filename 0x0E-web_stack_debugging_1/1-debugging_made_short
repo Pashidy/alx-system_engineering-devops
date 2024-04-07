@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# SHorter version of Task 0 
 ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-service nginx start
-kill "$(pgrep 'nginx' | head -1)"
+service nginx restart
+sleep 1
+pkill -f 'nginx'
 
