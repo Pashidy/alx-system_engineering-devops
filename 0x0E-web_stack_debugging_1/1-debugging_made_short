@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # SHorter version of Task 0 
-
 sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 sudo service nginx start
 
