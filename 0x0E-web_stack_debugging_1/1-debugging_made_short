@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-service nginx restart
-sleep 1
-pkill -f 'nginx'
+# A shorter version of your the first task meeting the stated requirements
 
+sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+sudo service nginx start
+printf "\n"
