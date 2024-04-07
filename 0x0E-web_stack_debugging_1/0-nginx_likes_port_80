@@ -1,53 +1,6 @@
 #!/usr/bin/env bash
 # To ensure Nginx is configured to listen on port 80 and fixes any issues.
 
-# Install Nginx if not already installed
-if ! dpkg -l nginx &> /dev/null; then
-    echo "Nginx is not installed. Installing Nginx..."
-    sudo apt-get update
-    sudo apt-get install -y nginx
-
-    # Check if Nginx installation was successful
-    if ! dpkg -l nginx &> /dev/null; then
-        echo "Failed to install Nginx. Please check your internet connection and try again."
-        exit 1
-    fi
-fi
-
-# Check if Nginx service is running
-if ! systemctl is-active --quiet nginx; then
-    echo "Starting Nginx service..."
-    sudo systemctl start nginx
-
-    # Check if Nginx service started successfully
-    if ! systemctl is-active --quiet nginx; then
-        echo "Failed to start Nginx service."
-        exit 1
-    fi
-fi
-
-# Check if Nginx configuration already specifies port 80
-nginx_conf="/etc/nginx/sites-available/default"
-if grep -q "listen 80" "$nginx_conf"; then
-    echo "Nginx is already configured to listen on port 80."
-    exit 0
-fi
-
-# Update Nginx configuration to listen on port 80
-sudo sed -i 's/^.*listen.*$/    listen 80;/g' "$nginx_conf"
-
-# Create a symbolic link if not exists
-if [ ! -e "/etc/nginx/sites-enabled/default" ]; then
-    sudo ln -sf "$nginx_conf" /etc/nginx/sites-enabled/default
-fi
-
-# Restart Nginx service
-sudo systemctl restart nginx
-
-# Check if Nginx is listening on port 80
-if ! netstat -tuln | grep ':80' &> /dev/null; then
-    echo "Nginx failed to start listening on port 80. Please check for errors."
-    exit 1
-fi
-
-echo "Nginx is now configured to listen on port 80."
+ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+service nginx restart
+kill "$(pgrep 'nginx' | head -1)"
