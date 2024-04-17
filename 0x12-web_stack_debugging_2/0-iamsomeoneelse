@@ -6,4 +6,9 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
-su -c "whoami" - "$1"
+if ! id "$1" &>/dev/null; then
+    echo "User '$1' does not exist."
+    exit 1
+fi
+
+sudo -u "$1" whoami
