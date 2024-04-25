@@ -8,39 +8,20 @@ import requests
 import csv
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2 or not sys.argv[1].isdigit():
-        print("Usage: python3 export_to_CSV.py <employee_id>")
-        sys.exit(1)
+    # Get the user ID from the command-line arguments provided to the script
+    user_id = sys.argv[1]
 
-    employee_id = int(sys.argv[1])
+    url = "https://jsonplaceholder.typicode.com/"
 
-    # Fetch data from the API
-    base_url = "https://jsonplaceholder.typicode.com"
-    user_response = requests.get(f"{base_url}/users/{employee_id}")
-    todos_response = requests.get(f"{base_url}/todos?userId={employee_id}")
+    user = requests.get(url + "users/{}".format(user_id)).json()
 
-    if user_response.status_code != 200 or todos_response.status_code != 200:
-        print("Error: Failed to fetch data from the API.")
-        sys.exit(1)
+    username = user.get("username")
 
-    user_data = user_response.json()
-    todos_data = todos_response.json()
+    todos = requests.get(url + "todos", params={"userId": user_id}).json()
 
-    # Extract relevant information
-    employee_name = user_data.get("username")
+    with open("{}.csv".format(user_id), "w", newline="") as csvfile:
+        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
+        [writer.writerow(
+            [user_id, username, t.get("completed"), t.get("title")]
+         ) for t in todos]
 
-    # Prepare data for CSV
-    csv_data = []
-    for task in todos_data:
-        task_completed_status = "True" if task.get("completed") else "False"
-        task_title = task.get("title")
-        csv_data.append([employee_id, employee_name, task_completed_status, task_title])
-
-    # Write data to CSV file
-    csv_filename = f"{employee_id}.csv"
-    with open(csv_filename, "w", newline="") as csv_file:
-        csv_writer = csv.writer(csv_file)
-        csv_writer.writerow(["USER_ID", "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
-        csv_writer.writerows(csv_data)
-
-    print(f"Data exported to {csv_filename} successfully.")
