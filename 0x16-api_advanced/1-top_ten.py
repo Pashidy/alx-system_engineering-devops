@@ -13,14 +13,22 @@ def top_ten(subreddit):
     Returns:
         None
     """
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=10"
-    headers = {"User-Agent": "my_bot"}  # Set a custom User-Agent
-    response = requests.get(url, headers=headers, allow_redirects=False)
+     url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
 
-    if response.status_code == 200:
-        data = response.json()
-        posts = data["data"]["children"]
-        for post in posts:
-            print(post["data"]["title"])
-    else:
-        print(none)
+    headers = {
+        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
+    }
+
+    params = {
+        "limit": 10
+    }
+
+    response = requests.get(url, headers=headers, params=params,
+                            allow_redirects=False)
+
+    if response.status_code == 404:
+        print("None")
+        return
+
+    results = response.json().get("data")
+    [print(c.get("data").get("title")) for c in results.get("children")]
